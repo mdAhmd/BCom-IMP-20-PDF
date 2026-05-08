@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCom PDF Portal</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --bg-2: #0d1728;
+      --panel: rgba(13, 23, 40, 0.86);
+      --card: rgba(18, 28, 48, 0.92);
+      --card-hover: rgba(24, 37, 63, 0.98);
+      --line: rgba(148, 163, 184, 0.16);
+      --text: #e5eefb;
+      --muted: #9aa7bd;
+      --accent: #60a5fa;
+      --accent-2: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(96, 165, 250, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(34, 197, 94, 0.10), transparent 26%),
+        linear-gradient(135deg, #030712 0%, var(--bg) 45%, #0b1323 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 42px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(13, 23, 40, 0.96), rgba(18, 28, 48, 0.86));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-top {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 18px;
+      align-items: end;
+    }
+
+    .title h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .title p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+      max-width: 760px;
+    }
+
+    .info-box {
+      border: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.52);
+      border-radius: 20px;
+      padding: 18px;
+    }
+
+    .info-box strong {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .info-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr auto;
+      gap: 12px;
+      margin-top: 2px;
+    }
+
+    .toolbar input,
+    .toolbar select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.86);
+      color: var(--text);
+      outline: none;
+    }
+
+    .toolbar input::placeholder { color: #64748b; }
+
+    .toolbar button,
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .toolbar button:hover,
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-2), #16a34a);
+      color: white;
+      box-shadow: 0 10px 24px rgba(34, 197, 94, 0.20);
+    }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .section-head {
+      margin: 26px 0 14px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--card), rgba(10, 18, 31, 0.95));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      min-height: 196px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(180deg, var(--card-hover), rgba(10, 18, 31, 0.98));
+      border-color: rgba(96, 165, 250, 0.32);
+    }
+
+    .card-top h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .card-top p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.10);
+      color: #bfdbfe;
+      border: 1px solid rgba(96, 165, 250, 0.16);
+      font-size: 12px;
+    }
+
+    .card-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions .btn { flex: 1 1 0; min-width: 0; }
+
+    .detail {
+      display: none;
+      margin-top: 22px;
+      background: linear-gradient(180deg, rgba(13, 23, 40, 0.96), rgba(8, 17, 31, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .detail.show { display: block; }
+
+    .detail-inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 0;
+    }
+
+    .pdf-look {
+      min-height: 420px;
+      background:
+        radial-gradient(circle at top right, rgba(96, 165, 250, 0.15), transparent 26%),
+        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+      position: relative;
+      padding: 28px;
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pdf-sheet {
+      width: min(100%, 340px);
+      aspect-ratio: 0.72 / 1;
+      background: linear-gradient(180deg, #f8fafc, #e2e8f0);
+      border-radius: 20px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.25);
+      color: #0f172a;
+      position: relative;
+      overflow: hidden;
+      transform: rotate(-2deg);
+    }
+
+    .pdf-sheet:before {
+      content: "PDF";
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-weight: 900;
+      font-size: 74px;
+      letter-spacing: -0.07em;
+      color: rgba(15, 23, 42, 0.08);
+      transform: rotate(-18deg);
+      pointer-events: none;
+    }
+
+    .pdf-sheet-inner {
+      padding: 26px;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      z-index: 1;
+    }
+
+    .pdf-sheet-inner .mini {
+      font-size: 12px;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 700;
+    }
+
+    .pdf-sheet-inner h3 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 36px);
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+
+    .pdf-sheet-inner .sub {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
+    .pdf-sheet-inner .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: end;
+      color: #334155;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .detail-panel {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .detail-panel h3 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.03em;
+    }
+
+    .detail-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .pay-box {
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      background: rgba(96, 165, 250, 0.06);
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .pay-box strong { display: block; margin-bottom: 8px; }
+    .pay-box div { color: var(--muted); line-height: 1.65; font-size: 14px; }
+
+    .actions-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .actions-row .btn { min-width: 160px; }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      border-left: 3px solid rgba(96, 165, 250, 0.45);
+      padding-left: 12px;
+    }
+
+    .notice {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px dashed rgba(148, 163, 184, 0.22);
+      background: rgba(8, 17, 31, 0.52);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    footer {
+      margin: 24px 0 4px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.72);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.show { display: flex; }
+
+    .modal {
+      width: min(100%, 440px);
+      background: linear-gradient(180deg, rgba(13, 23, 40, 0.98), rgba(18, 28, 48, 0.98));
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .modal h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .modal p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 14px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.96);
+      color: var(--text);
+      outline: none;
+      font-size: 14px;
+    }
+
+    .modal .row {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .modal .row .btn { flex: 1; }
+
+    .error {
+      min-height: 18px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #fca5a5;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .hero-top,
+      .detail-inner { grid-template-columns: 1fr; }
+      .pdf-look { border-right: none; border-bottom: 1px solid var(--line); }
+      .toolbar { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="title">
+          <h1>BCom Important Question PDF Portal</h1>
+          <p>
+            Select any subject to open its PDF. Each subject can have its own PDF file and password.
+           
+          </p>
+        </div>
+        <div class="info-box">
+          <strong>Payment & Contact</strong>
+          <p>
+            All subjects: ₹100<br />
+            Single subject: ₹20<br />
+            Contact: <strong>7869231186</strong><br />
+            Password for this: <strong>XXXXXXXX</strong>
+          </p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" type="text" placeholder="Search a subject..." />
+        <select id="sortSelect">
+          <option value="date">Sort by date</option>
+          <option value="name">Sort by name</option>
+        </select>
+        <button onclick="scrollToSubjects()">View Subjects</button>
+      </div>
+    </section>
+
+    <div class="section-head">
+      <h2>Subjects</h2>
+      <span id="countLabel">11 subjects</span>
+    </div>
+
+    <section id="subjectsGrid" class="grid"></section>
+
+    <section id="detailView" class="detail" aria-live="polite">
+      <div class="detail-inner">
+        <div class="pdf-look">
+          <div class="pdf-sheet">
+            <div class="pdf-sheet-inner">
+              <div class="mini" id="detailMini">PDF Preview</div>
+              <div>
+                <h3 id="detailPdfTitle">Subject PDF</h3>
+                <div class="sub" id="detailPdfSub">Click open or download after entering the password.</div>
+              </div>
+              <div class="footer">
+                <span>BCom Notes</span>
+                <span id="detailDate">2026</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="detail-panel">
+          <div>
+            <h3 id="detailSubjectName">Subject Name</h3>
+            <p id="detailSubjectDesc">
+              This page is a clean PDF gateway. You can connect a real PDF file to each subject and keep the layout premium.
+            </p>
+          </div>
+
+          <div class="pay-box">
+            <strong>Access Information</strong>
+            <div>
+              All subjects: ₹100<br />
+              One subject: ₹20<br />
+              Contact: 7869231186<br />
+              Password required before open/download.
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button class="btn btn-primary" id="openBtn">Open PDF</button>
+            <button class="btn btn-secondary" id="downloadBtn">Download PDF</button>
+          </div>
+
+          <div class="hint">
+           Contact 7869231186 and buy <b>pdfUrl</b> in the JavaScript array.
+           <code></code> <code></code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="notice">
+      Note: the password gate here is client-side only.
+    </div>
+
+    <footer>
+      © 2026 BA / BCom PDF Portal
+    </footer>
+  </div>
+
+  <div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <h3>Enter Password</h3>
+      <p id="modalText">Type the password to open or download this PDF.</p>
+      <input id="passwordInput" type="password" placeholder="Password" autocomplete="off" />
+      <div class="row">
+        <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitPassword()">Submit</button>
+      </div>
+      <div class="error" id="errorText"></div>
+    </div>
+  </div>
+
+  <script>
+    const subjects = [
+      { date: "05/05/2026", name: "Hindi", fileName: "hindi.pdf", pdfUrl: "pdfs/hindi.pdf", password: "bullshit", short: "Hindi medium notes, important questions and answers." },
+      { date: "07/05/2026", name: "English", fileName: "english.pdf", pdfUrl: "pdfs/english.pdf", password: "bullshit", short: "English grammar, comprehension and exam-focused notes." },
+      { date: "09/05/2026", name: "Understanding India", fileName: "understanding-india.pdf", pdfUrl: "pdfs/understanding-india.pdf", password: "bullshit", short: "Short, useful and exam-friendly subject notes." },
+      { date: "16/05/2026", name: "Financial Accounting", fileName: "financial-accounting.pdf", pdfUrl: "pdfs/financial-accounting.pdf", password: "bullshit", short: "Core accounting topics with questions and answers." },
+      { date: "21/05/2026", name: "Cost Accounting", fileName: "cost-accounting.pdf", pdfUrl: "pdfs/cost-accounting.pdf", password: "bullshit", short: "Important formulas, definitions and answers." },
+      { date: "23/05/2026", name: "Business Law", fileName: "business-law.pdf", pdfUrl: "pdfs/business-law.pdf", password: "bullshit", short: "Case-based and theory-focused law notes." },
+      { date: "29/05/2026", name: "Business Mathematics", fileName: "business-mathematics.pdf", pdfUrl: "pdfs/business-mathematics.pdf", password: "bullshit", short: "Problem-solving formulas and short revision notes." },
+      { date: "01/06/2026", name: "Business Organisation & Communication", fileName: "business-organisation-communication.pdf", pdfUrl: "pdfs/business-organisation-communication.pdf", password: "bullshit", short: "Organisation, communication and exam points." },
+      { date: "08/06/2026", name: "Rural Banking & Entrepreneurship", fileName: "rural-banking-entrepreneurship.pdf", pdfUrl: "pdfs/rural-banking-entrepreneurship.pdf", password: "bullshit", short: "Rural economy, banking and startup concepts." },
+      { date: "09/06/2026", name: "Tourism", fileName: "tourism.pdf", pdfUrl: "pdfs/tourism.pdf", password: "bullshit", short: "Tourism theory, definitions and important answers." },
+      { date: "12/06/2026", name: "Additional Subject", fileName: "additional-subject.pdf", pdfUrl: "pdfs/additional-subject.pdf", password: "bullshit", short: "Use this slot for another subject later." }
+    ];
+
+    let currentSubject = null;
+    let currentAction = null;
+
+    const grid = document.getElementById('subjectsGrid');
+    const searchInput = document.getElementById('searchInput');
+    const sortSelect = document.getElementById('sortSelect');
+    const countLabel = document.getElementById('countLabel');
+    const detailView = document.getElementById('detailView');
+    const detailSubjectName = document.getElementById('detailSubjectName');
+    const detailSubjectDesc = document.getElementById('detailSubjectDesc');
+    const detailPdfTitle = document.getElementById('detailPdfTitle');
+    const detailPdfSub = document.getElementById('detailPdfSub');
+    const detailMini = document.getElementById('detailMini');
+    const detailDate = document.getElementById('detailDate');
+    const openBtn = document.getElementById('openBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const passwordInput = document.getElementById('passwordInput');
+    const modalText = document.getElementById('modalText');
+    const errorText = document.getElementById('errorText');
+
+    function scrollToSubjects() {
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function renderSubjects() {
+      const query = searchInput.value.trim().toLowerCase();
+      let list = [...subjects];
+
+      if (query) {
+        list = list.filter(s => s.name.toLowerCase().includes(query));
+      }
+
+      if (sortSelect.value === 'name') {
+        list.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        list.sort((a, b) => dateValue(a.date) - dateValue(b.date));
+      }
+
+      countLabel.textContent = `${list.length} subject${list.length === 1 ? '' : 's'}`;
+      grid.innerHTML = list.map((subject, index) => `
+        <article class="card">
+          <div class="card-top">
+            <h3>${subject.name}</h3>
+            <p>${subject.short}</p>
+            <div class="tag">Date: ${subject.date}</div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary" onclick='openSubject(${JSON.stringify(subject).replace(/'/g, "&apos;")})'>Open</button>
+            <button class="btn btn-secondary" onclick='openSubject(${JSON.stringify(subject).replace(/'/g, "&apos;")})'>Download</button>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    function dateValue(d) {
+      const [day, month, year] = d.split('/').map(Number);
+      return new Date(year, month - 1, day).getTime();
+    }
+
+    function openSubject(subject) {
+      currentSubject = subject;
+      detailView.classList.add('show');
+      detailSubjectName.textContent = subject.name;
+      detailSubjectDesc.textContent = `${subject.name} PDF page. Click open or download after entering the password.`;
+      detailPdfTitle.textContent = `${subject.name} PDF`;
+      detailPdfSub.textContent = `Preview page for ${subject.name}. Real PDF file linked in code by Ahmed.`;
+      detailMini.textContent = 'PDF Preview';
+      detailDate.textContent = subject.date;
+      detailView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      window.location.hash = encodeURIComponent(subject.name);
+    }
+
+    function openModal(action) {
+      currentAction = action;
+      errorText.textContent = '';
+      modalText.textContent = currentSubject
+        ? `Enter password to ${action} ${currentSubject.name} PDF.`
+        : 'Enter password.';
+      modalBackdrop.classList.add('show');
+      passwordInput.value = '';
+      setTimeout(() => passwordInput.focus(), 50);
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove('show');
+      errorText.textContent = '';
+      passwordInput.value = '';
+    }
+
+    function submitPassword() {
+      if (!currentSubject) return;
+      const value = passwordInput.value.trim();
+      if (value !== currentSubject.password) {
+        errorText.textContent = 'Wrong password. Try again.';
+        return;
+      }
+
+      const pdfUrl = currentSubject.pdfUrl;
+      if (currentAction === 'open') {
+        window.open(pdfUrl, '_blank');
+      } else if (currentAction === 'download') {
+        const a = document.createElement('a');
+        a.href = pdfUrl;
+        a.download = currentSubject.fileName || `${currentSubject.name}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+      closeModal();
+    }
+
+    openBtn.addEventListener('click', () => openModal('open'));
+    downloadBtn.addEventListener('click', () => openModal('download'));
+    searchInput.addEventListener('input', renderSubjects);
+    sortSelect.addEventListener('change', renderSubjects);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+    passwordInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') submitPassword();
+    });
+
+    function handleHash() {
+      const hash = decodeURIComponent(window.location.hash.replace('#', '').trim());
+      if (!hash) return;
+      const found = subjects.find(s => s.name.toLowerCase() === hash.toLowerCase());
+      if (found) openSubject(found);
+    }
+
+    renderSubjects();
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+
+
+  </script>
+</body>
+</html>
